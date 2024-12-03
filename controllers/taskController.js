@@ -1,89 +1,42 @@
-// controllers/itemController.js
-const items = require("./models/itemModel");
-// Get all iTask
-const getAllItems = async (req, res) => {
-  try {
-    res
-      .status(200)
-      .json({ message: "Task retrieved successfully", data: Task });
-  } catch (error) {
-    res
-      .status(500)
-      .json({ message: "An error occurred", error: error.message });
-  }
+const tasks = require('./models/taskModel');
+
+const getAllTasks = (req, res) => {
+    res.json(tasks);
 };
-// Get a specific item by ID
-const getTaskById = async (req, res) => {
-  try {
-    const id = parseInt(req.params.id);
-    const task = Task.find((Task) => Task.id === id);
-    if (Task) {
-      res
-        .status(200)
-        .json({ message: "Task retrieved successfully", data: Task });
-    } else {
-      res.status(404).json({ message: "Task not found" });
-    }
-  } catch (error) {
-    res
-      .status(500)
-      .json({ message: "An error occurred", error: error.message });
-  }
+
+const addTask = (req, res) => {
+    const newTask = {
+        id: tasks.length + 1,
+        task: req.body.task,
+        status: req.body.status || "Incomplete"
+    };
+    tasks.push(newTask);
+    res.status(201).json(newTask);
 };
-// Add a new item
-const addTask = async (req, res) => {
-  try {
-    const newTask = req.body;
-    Task.push(newTask);
-    res.status(201).json({ message: "Task added successfully", data: Task });
-  } catch (error) {
-    res
-      .status(500)
-      .json({ message: "An error occurred", error: error.message });
-  }
+
+const updateTask = (req, res) => {
+    const taskId = parseInt(req.params.id);
+    const taskIndex = tasks.findIndex(task => task.id === taskId);
+    
+    if (taskIndex === -1) return res.status(404).json({ message: "Task not found" });
+
+    tasks[taskIndex] = { ...tasks[taskIndex], ...req.body };
+    res.json(tasks[taskIndex]);
 };
-// Update an existing item
-const updateTask = async (req, res) => {
-  try {
-    const id = parseInt(req.params.id);
-    const index = items.findIndex((Task) => Task.id === id);
-    if (index !== -1) {
-      Task[index] = { ...Task[index], ...req.body };
-      res
-        .status(200)
-        .json({ message: "Task updated successfully", data: Task });
-    } else {
-      res.status(404).json({ message: "Task not found" });
-    }
-  } catch (error) {
-    res
-      .status(500)
-      .json({ message: "An error occurred", error: error.message });
-  }
+
+const deleteTask = (req, res) => {
+    const taskId = parseInt(req.params.id);
+    const taskIndex = tasks.findIndex(task => task.id === taskId);
+    
+    if (taskIndex === -1) return res.status(404).json({ message: "Task not found" });
+
+    tasks.splice(taskIndex, 1);
+    res.status(204).send();
 };
-// Delete an item
-const deleteTask = async (req, res) => {
-  try {
-    const id = parseInt(req.params.id);
-    const index = Task.findIndex((Task) => Task.id === id);
-    if (index !== -1) {
-      Task.splice(index, 1);
-      res
-        .status(200)
-        .json({ message: "Task deleted successfully", data: Task });
-    } else {
-      res.status(404).json({ message: "Task not found" });
-    }
-  } catch (error) {
-    res
-      .status(500)
-      .json({ message: "An error occurred", error: error.message });
-  }
-};
+
 module.exports = {
-  getAllITask,
-  getTaskById,
-  addTask,
-  updateTask,
-  deleteTask,
+    getAllTasks,
+    addTask,
+    updateTask,
+    deleteTask
 };

@@ -1,19 +1,15 @@
-// routes/itemRoutes.js
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 const {
-  getAllTask,
-  gettaskById,
-  addTask,
-  updatTask,
-  deletTask,
-} = require("./controllers/taskController");
+    getAllTasks,
+    addTask,
+    updateTask,
+    deleteTask
+} = require('./controllers/taskController').default.default.default;
 
-// Route definitions
-router.get("/", getAllTask);
-router.get("/:id", getTaskById);
-router.post("/", addTask);
-router.put("/:id", updateTask);
-router.delete("/:id", deleteTask);
+router.get('/api/tasks', getAllTasks);
+router.post('/api/tasks', addTask);
+router.put('/api/tasks/:id', updateTask);
+router.delete('/api/tasks/:id', deleteTask);
 
 module.exports = router;

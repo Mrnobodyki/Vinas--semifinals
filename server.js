@@ -1,15 +1,17 @@
-// index.js
-require("dotenv").config();
-const express = require("express");
+const express = require('express');
+const bodyParser = require('body-parser');
+const taskRoutes = require('./routes/taskRoutes');
+const dotenv = require('dotenv');
+
+dotenv.config();
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
-app.use(express.json());
+app.use(bodyParser.json());
 
-// Routes
-const itemRoutes = require("./routes/taskRoutes");
-app.use("/items", itemRoutes);
+app.use(taskRoutes);
 
-// Start server
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
